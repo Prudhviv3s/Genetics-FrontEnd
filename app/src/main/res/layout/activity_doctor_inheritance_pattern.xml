@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".DoctorInheritancePatternActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/solidblue"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@android:color/white"
+            app:title="Inheritance Pattern"
+            app:titleTextColor="@android:color/white" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- Patient Header Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="#F0F5FF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#1D61FF"
+                app:strokeWidth="1dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        app:cardBackgroundColor="#E6F7FF"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="0dp">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_person"
+                            app:tint="@color/solidblue" />
+                    </com.google.android.material.card.MaterialCardView>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/tv_patient_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Sarah Johnson"
+                            android:textColor="#1A1A1A"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tv_patient_id_age"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ID: #P1 · 35 years"
+                            android:textColor="#595959"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_feature"
+                    app:tint="@color/solidblue" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="Detected Patterns"
+                    android:textColor="#1A1A1A"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Ranked by probability and matching criteria"
+                android:textColor="#595959"
+                android:textSize="14sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
+
+            <!-- Pattern 1: Autosomal Dominant -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btn_autosomal_dominant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#E8E8E8"
+                app:strokeWidth="1dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp">
+                    <TextView
+                        android:id="@+id/tv_title1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Autosomal Dominant"
+                        android:textColor="#1A1A1A"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="#BFBFBF" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_title1"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="40dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ProgressBar
+                            android:id="@+id/pb_autosomal_dominant"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="8dp"
+                            android:layout_weight="1"
+                            android:progress="78"
+                            android:progressDrawable="@drawable/solid_blue_progress_bar" />
+                        <TextView
+                            android:id="@+id/tv_percent_autosomal_dominant"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:text="78%"
+                            android:textColor="#595959"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Pattern 2: Autosomal Recessive -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btn_autosomal_recessive"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#E8E8E8"
+                app:strokeWidth="1dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp">
+                    <TextView
+                        android:id="@+id/tv_title2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Autosomal Recessive"
+                        android:textColor="#1A1A1A"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="#BFBFBF" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_title2"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="40dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ProgressBar
+                            android:id="@+id/pb_autosomal_recessive"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="8dp"
+                            android:layout_weight="1"
+                            android:progress="42"
+                            android:progressDrawable="@drawable/orange_progress_bar" />
+                        <TextView
+                            android:id="@+id/tv_percent_autosomal_recessive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:text="42%"
+                            android:textColor="#595959"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Pattern 3: X-Linked -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btn_x_linked"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#E8E8E8"
+                app:strokeWidth="1dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp">
+                    <TextView
+                        android:id="@+id/tv_title3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="X-Linked"
+                        android:textColor="#1A1A1A"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="#BFBFBF" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_title3"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="40dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ProgressBar
+                            android:id="@+id/pb_x_linked"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="8dp"
+                            android:layout_weight="1"
+                            android:progress="15"
+                            android:progressDrawable="@drawable/purple_progress_bar" />
+                        <TextView
+                            android:id="@+id/tv_percent_x_linked"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:text="15%"
+                            android:textColor="#595959"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Pattern 4: Y-Linked -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btn_y_linked"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#E8E8E8"
+                app:strokeWidth="1dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp">
+                    <TextView
+                        android:id="@+id/tv_title4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Y-Linked"
+                        android:textColor="#1A1A1A"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="#BFBFBF" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_title4"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="40dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ProgressBar
+                            android:id="@+id/pb_y_linked"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="8dp"
+                            android:layout_weight="1"
+                            android:progress="5"
+                            android:progressDrawable="@drawable/green_progress_bar" />
+                        <TextView
+                            android:id="@+id/tv_percent_y_linked"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:text="5%"
+                            android:textColor="#595959"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Pattern 5: Mitochondrial -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btn_mitochondrial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#E8E8E8"
+                app:strokeWidth="1dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp">
+                    <TextView
+                        android:id="@+id/tv_title5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mitochondrial"
+                        android:textColor="#1A1A1A"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="#BFBFBF" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_title5"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="40dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ProgressBar
+                            android:id="@+id/pb_mitochondrial"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="8dp"
+                            android:layout_weight="1"
+                            android:progress="8"
+                            android:progressDrawable="@drawable/red_progress_bar" />
+                        <TextView
+                            android:id="@+id/tv_percent_mitochondrial"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:text="8%"
+                            android:textColor="#595959"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Analysis Notes -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                app:cardBackgroundColor="#F0F5FF"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#1D61FF"
+                app:strokeWidth="1dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Analysis Notes"
+                        android:textColor="#1A1A1A"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Based on the pedigree data, autosomal dominant pattern shows the highest probability. Tap on each pattern for detailed analysis and supporting evidence."
+                        android:textColor="#595959"
+                        android:textSize="14sp"
+                        android:lineSpacingExtra="4dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_view_full_report"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="32dp"
+                android:backgroundTint="@color/solidblue"
+                android:text="View Summary Report"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_document"
+                app:iconGravity="textStart"
+                app:iconPadding="12dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

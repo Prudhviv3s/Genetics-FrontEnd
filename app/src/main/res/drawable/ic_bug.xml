@@ -1,0 +1,9 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <!-- Caterpillar/Bug representation -->
+    <path android:fillColor="#4CAF50" android:pathData="M400,256c0,26.5 -21.5,48 -48,48s-48,-21.5 -48,-48s21.5,-48 48,-48S400,229.5 400,256z M304,256c0,26.5 -21.5,48 -48,48s-48,-21.5 -48,-48s21.5,-48 48,-48S304,229.5 304,256z M208,256c0,26.5 -21.5,48 -48,48s-48,-21.5 -48,-48s21.5,-48 48,-48S208,229.5 208,256z M112,256c0,26.5 -21.5,48 -48,48s-48,-21.5 -48,-48s21.5,-48 48,-48S112,229.5 112,256z"/>
+    <path android:fillColor="#8BC34A" android:pathData="M416,256c0,35.3 -28.7,64 -64,64s-64,-28.7 -64,-64s28.7,-64 64,-64S416,220.7 416,256z"/>
+</vector>

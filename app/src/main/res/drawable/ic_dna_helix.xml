@@ -1,0 +1,51 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100"
+    android:tint="@android:color/white">
+
+    <!-- Central S-curve (Wavy Spine) -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M15,65 Q30,60 50,50 T85,35"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="4"
+        android:strokeLineCap="round" />
+
+    <!-- Pegs for Central Spine -->
+    <path
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M25,62 v-4 M35,59 v-4 M45,53 v-4 M55,47 v-4 M65,41 v-4 M75,38 v-4" />
+
+    <!-- Top Right Curved Segment -->
+    <path
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M55,30 Q65,15 80,15" />
+
+    <!-- Pegs for Top Right Segment -->
+    <path
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M60,25 h-4 M68,18 h-4 M75,15 h-4" />
+
+    <!-- Bottom Left Curved Segment -->
+    <path
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M20,85 Q35,85 45,70" />
+
+    <!-- Pegs for Bottom Left Segment -->
+    <path
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M25,85 v-4 M35,82 v-4 M42,75 v-4" />
+
+</vector>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Genetics">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".WelcomeActivity" />
+        <activity android:name=".RoleSelectionActivity" />
+        <activity android:name=".CreateAccountActivity" />
+        <activity android:name=".ProfileSetupActivity" />
+        <activity android:name=".PrivacyDisclaimerActivity" />
+        <activity android:name=".SignInRoleActivity" />
+        <activity android:name=".SignInActivity" />
+        <activity android:name=".ForgotPasswordActivity" />
+        <activity android:name=".CreateNewPasswordActivity" />
+        <activity
+            android:name=".PatientHomeActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".AnalysisActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".SettingsActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".PedigreeActivity"
+            android:launchMode="singleTop" />
+        <activity android:name=".LogoutSplashActivity" />
+        <activity android:name=".MyProfileActivity" />
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".NotificationsActivity" />
+        <activity android:name=".LanguageActivity" />
+        <activity android:name=".AccessibilityActivity" />
+        <activity android:name=".HelpCenterActivity" />
+        <activity android:name=".FAQActivity" />
+        <activity android:name=".HelpCenterActivity" />
+        <activity android:name=".FAQActivity" />
+        <activity android:name=".FeedbackActivity" />
+        <activity android:name=".FeedbackSuccessActivity" />
+        <activity android:name=".AddFamilyMemberActivity" />
+        <activity android:name=".SelectRelationshipActivity" />
+        <activity android:name=".HealthStatusActivity" />
+        <activity android:name=".FamilyOverviewActivity" />
+
+
+        <activity
+            android:name=".ExportReportActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ShareReportActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorHomeActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".DoctorPedigreeListActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".DoctorPedigreeAnalysisActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".DoctorAnalysisActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".DoctorSettingsActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".PatientDetailsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorDnaReportActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorInheritancePatternActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorPatternDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorMitochondrialDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorAutosomalRecessiveDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorXLinkedDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorYLinkedDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorNotesActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorPatientReportsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorReportDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorReportExportActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorReportShareActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorPatientListActivity"
+            android:launchMode="singleTop" />
+    </application>
+
+
+
+
+
+</manifest>

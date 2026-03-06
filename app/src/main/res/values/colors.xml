@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="blue">#1A237E</color>
+    <color name="button_blue">#304FFE</color>
+    <color name="solidblue">#1C57D9</color>
+    <color name="light_gray">#F2F2F2</color>
+    <color name="orange_icon">#FF9800</color>
+    
+    <!-- Status Colors -->
+    <color name="status_red">#F5222D</color>
+    <color name="status_orange">#FA8C16</color>
+    <color name="status_green">#52C41A</color>
+    <color name="status_gray">#595959</color>
+    <color name="text_secondary">#757575</color>
+    <color name="gray_text">#808080</color>
+</resources>

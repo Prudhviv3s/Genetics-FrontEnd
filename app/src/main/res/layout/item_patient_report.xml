@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#E8E8E8"
+    app:strokeWidth="1dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Profile Icon -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_profile"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:cardBackgroundColor="#E6F7FF"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:src="@drawable/ic_person"
+                app:tint="#1890FF" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Patient Info -->
+        <LinearLayout
+            android:id="@+id/ll_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@id/cv_profile"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_patient_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sarah Johnson"
+                android:textColor="#1A1A1A"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_patient_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Age: 34"
+                android:textColor="#595959"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_patient_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="ID: PT1001"
+                android:textColor="#595959"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <!-- Chevron Right -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="#BFBFBF" />
+
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

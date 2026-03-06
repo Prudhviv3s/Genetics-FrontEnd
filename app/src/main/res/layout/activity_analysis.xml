@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".AnalysisActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#1D61FF">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Analysis Results"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_nav_container"
+        android:layout_below="@id/appBarLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Analysis Complete Blue Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="#1D61FF"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="24dp">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_ribbon"
+                        app:tint="@android:color/white" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Analysis Complete"
+                            android:textColor="@android:color/white"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Inheritance pattern identified"
+                            android:textColor="#E0E0E0"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Primary Pattern Section -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/high_confidence_badge"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Primary Pattern"
+                            android:textColor="#1A212E"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_confidence_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:background="@drawable/high_confidence_badge"
+                            android:paddingHorizontal="12sp"
+                            android:paddingVertical="4sp"
+                            android:text="High Confidence"
+                            android:textColor="#389E0D"
+                            android:textSize="13sp" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/tv_primary_pattern_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Autosomal Dominant"
+                        android:textColor="#1D61FF"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp">
+
+                        <ProgressBar
+                            android:id="@+id/pb_primary"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="12dp"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/tv_primary_percent"
+                            android:layout_marginEnd="8dp"
+                            android:progress="78"
+                            android:progressDrawable="@drawable/solid_blue_progress_bar" />
+
+                        <TextView
+                            android:id="@+id/tv_primary_percent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="78%"
+                            android:textColor="#1A212E"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:background="@drawable/evidence_box_background"
+                        android:padding="16dp"
+                        android:text="Strong evidence supports autosomal dominant inheritance with 4 out of 5 classical criteria met."
+                        android:textColor="#595959"
+                        android:textSize="14sp"
+                        android:lineSpacingExtra="4dp"/>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Alternative Patterns Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Alternative Patterns"
+                android:textColor="#1A212E"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Autosomal Recessive Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/alt_row_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/item_border_background"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tv_alt1_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Autosomal Recessive"
+                            android:textColor="#1A212E"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/tv_alt1_percent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="42%"
+                            android:textColor="#8C8C8C"
+                            android:textSize="14sp" />
+                    </RelativeLayout>
+
+                    <ProgressBar
+                        android:id="@+id/pb_alt1"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="12dp"
+                        android:progress="42"
+                        android:progressDrawable="@drawable/orange_progress_bar" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- X-Linked Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/alt_row_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/item_border_background"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tv_alt2_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="X-Linked"
+                            android:textColor="#1A212E"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/tv_alt2_percent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="15%"
+                            android:textColor="#8C8C8C"
+                            android:textSize="14sp" />
+                    </RelativeLayout>
+
+                    <ProgressBar
+                        android:id="@+id/pb_alt2"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="12dp"
+                        android:progress="15"
+                        android:progressDrawable="@drawable/purple_progress_bar" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Share Report Button -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_share_report"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/blue_button_outline"
+                android:drawableStart="@drawable/ic_analysis_document"
+                android:drawablePadding="12dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:text="Share Report"
+                android:textAllCaps="false"
+                android:textColor="#1D61FF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:drawableTint="#1D61FF" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/bottom_nav_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemIconTint="@color/bottom_nav_color_selector"
+            app:itemTextColor="@color/bottom_nav_color_selector"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/bottom_navigation_menu" />
+    </FrameLayout>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/loader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80FFFFFF"
+        android:visibility="gone"
+        android:elevation="10dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+</FrameLayout>

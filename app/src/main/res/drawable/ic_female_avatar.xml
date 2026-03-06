@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <!-- Solid Blue Circle Background -->
+    <path
+        android:fillColor="#1C57D9"
+        android:pathData="M60,0 A60,60 0 1,1 59.9,0 Z" />
+    <!-- White Female Silhouette with Bob-cut Hair -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M60,24c-12,0 -21,9 -21,20v14c0,4 2,7 5,9c-6,3 -10.5,8 -13.5,14c-1.5,2.5 -2.5,5.5 -2.5,9c0,1 0.5,2.5 1,3.5c8.5,8 20.5,13 31,13.5c3,0.2 6,0.3 9,0.3c3,0 6,-0.1 9,-0.3c10.5,-0.5 22.5,-5.5 31,-13.5c0.5,-1 1,-2.5 1,-3.5c0,-3.5 -1,-6.5 -2.5,-9c-3,-6 -7.5,-11 -13.5,-14c3,-2 5,-5 5,-9V44C81,33 72,24 60,24z" />
+</vector>
