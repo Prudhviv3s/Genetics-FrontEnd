@@ -15,5 +15,10 @@ data class LatestAnalysisDto(
     val keyFindings: List<String>? = null,
 
     @SerializedName("clinical_recommendations")
-    val clinicalRecommendations: List<String>? = null
+    val clinicalRecommendations: List<String>? = null,
+
+    @SerializedName("family_members") val familyMembers: Int? = null,
+    @SerializedName("affected") val affected: Int? = null,
+    @SerializedName("generations") val generations: Int? = null,
+    @SerializedName("analysis_date") val analysisDate: String? = null
 )

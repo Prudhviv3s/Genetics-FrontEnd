@@ -33,7 +33,37 @@ class CreateNewPasswordActivity : AppCompatActivity() {
         }
         val passwordInput = findViewById<android.widget.EditText>(R.id.password_input)
         val confirmPasswordInput = findViewById<android.widget.EditText>(R.id.confirm_password_input)
-        
+
+        // Password visibility toggle 1
+        val passwordToggle1 = findViewById<android.widget.ImageView>(R.id.password_toggle_1)
+        var isPasswordVisible1 = false
+        passwordToggle1.setOnClickListener {
+            isPasswordVisible1 = !isPasswordVisible1
+            if (isPasswordVisible1) {
+                passwordInput.inputType = android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                passwordToggle1.setColorFilter(getColor(R.color.solidblue))
+            } else {
+                passwordInput.inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
+                passwordToggle1.setColorFilter(getColor(R.color.light_gray))
+            }
+            passwordInput.setSelection(passwordInput.text.length)
+        }
+
+        // Password visibility toggle 2
+        val passwordToggle2 = findViewById<android.widget.ImageView>(R.id.password_toggle_2)
+        var isPasswordVisible2 = false
+        passwordToggle2.setOnClickListener {
+            isPasswordVisible2 = !isPasswordVisible2
+            if (isPasswordVisible2) {
+                confirmPasswordInput.inputType = android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                passwordToggle2.setColorFilter(getColor(R.color.solidblue))
+            } else {
+                confirmPasswordInput.inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
+                passwordToggle2.setColorFilter(getColor(R.color.light_gray))
+            }
+            confirmPasswordInput.setSelection(confirmPasswordInput.text.length)
+        }
+
         val resetPasswordButton = findViewById<Button>(R.id.reset_password_button)
         resetPasswordButton.setOnClickListener {
             val otp = otpInput.text.toString().trim()
@@ -56,8 +86,9 @@ class CreateNewPasswordActivity : AppCompatActivity() {
                 passwordInput.requestFocus()
                 return@setOnClickListener
             }
-            if (password.length < 8) {
-                passwordInput.error = "Password must be at least 8 characters"
+            val missingRequirements = com.simats.genetics.utils.PasswordValidator.validate(password)
+            if (missingRequirements.isNotEmpty()) {
+                passwordInput.error = "Missing: " + missingRequirements.joinToString(", ")
                 passwordInput.requestFocus()
                 return@setOnClickListener
             }
@@ -90,7 +121,12 @@ class CreateNewPasswordActivity : AppCompatActivity() {
                         }
                     } else {
                         Log.e("RESET_PASSWORD", "Error: ${response.code()}")
-                        Toast.makeText(this@CreateNewPasswordActivity, "Error: ${response.code()}", Toast.LENGTH_SHORT).show()
+                        val errorMessage = if (response.code() == 400) {
+                            "Incorrect OTP"
+                        } else {
+                            "Error: ${response.code()}"
+                        }
+                        Toast.makeText(this@CreateNewPasswordActivity, errorMessage, Toast.LENGTH_SHORT).show()
                     }
                 }
 

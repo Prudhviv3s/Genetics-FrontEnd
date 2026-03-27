@@ -10,8 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.simats.genetics.network.ApiClient
 import com.simats.genetics.network.TokenManager
-import com.simats.genetics.network.responses.MyProfileResponse
-import com.simats.genetics.network.responses.PatientHomeResponse
+import com.simats.genetics.network.responses.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -101,6 +100,10 @@ class PatientHomeActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
         // Load from backend
         fetchMyProfileName()
         fetchPatientDashboard()
@@ -161,12 +164,36 @@ class PatientHomeActivity : AppCompatActivity() {
                 tvFamilyMembersCount.text = (d?.familyMembers ?: 0).toString()
                 tvGenerationsCount.text = (d?.generations ?: 0).toString()
                 tvActiveTraitsCount.text = (d?.activeTraits ?: 0).toString()
-                tvPendingResultsCount.text = (d?.pendingResults ?: 0).toString()
+                // tvPendingResultsCount.text = (d?.pendingResults ?: 0).toString() // Replaced by live check below
+
+                fetchLatestAnalysisStatus()
             }
 
             override fun onFailure(call: Call<PatientHomeResponse>, t: Throwable) {
                 Log.e("PAT_HOME", "FAIL ${t.message}", t)
                 Toast.makeText(this@PatientHomeActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun fetchLatestAnalysisStatus() {
+        ApiClient.getApi(this).getLatestAnalysis().enqueue(object : Callback<LatestAnalysisResponse> {
+            override fun onResponse(call: Call<LatestAnalysisResponse>, response: Response<LatestAnalysisResponse>) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body?.status == true && body.analysis != null) {
+                        tvPendingResultsCount.text = "1"
+                    } else {
+                        tvPendingResultsCount.text = "0"
+                    }
+                } else {
+                    tvPendingResultsCount.text = "0"
+                }
+            }
+
+            override fun onFailure(call: Call<LatestAnalysisResponse>, t: Throwable) {
+                Log.e("PAT_HOME", "Latest analysis check failed: ${t.message}")
+                tvPendingResultsCount.text = "0"
             }
         })
     }

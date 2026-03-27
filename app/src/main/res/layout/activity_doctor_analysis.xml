@@ -51,19 +51,10 @@
                 android:textColor="#595959"
                 android:textSize="16sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="RECENT ANALYSES"
-                android:textColor="#757B8C"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp">
+                android:layout_marginTop="32dp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_recent_analyses"

@@ -24,6 +24,7 @@ data class PedigreeNode(
     @SerializedName("full_name") val fullName: String?,
     @SerializedName("gender") val gender: String?,
     @SerializedName("relationship") val relationship: String?,
+    @SerializedName("side_of_family") val side_of_family: String?,
     @SerializedName("health_status") val healthStatus: String?,
     @SerializedName("is_proband") val isProband: Boolean = false,
     @SerializedName("age") val age: Int? = null

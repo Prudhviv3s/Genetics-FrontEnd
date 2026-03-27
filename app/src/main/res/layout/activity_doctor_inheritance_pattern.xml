@@ -446,17 +446,21 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_view_full_report"
+                android:id="@+id/btn_view_summary_report"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="32dp"
-                android:backgroundTint="@color/solidblue"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:text="View Summary Report"
+                android:textColor="@color/solidblue"
+                app:strokeColor="@color/solidblue"
+                app:strokeWidth="1dp"
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 app:cornerRadius="12dp"
                 app:icon="@drawable/ic_document"
+                app:iconTint="@color/solidblue"
                 app:iconGravity="textStart"
                 app:iconPadding="12dp" />
 

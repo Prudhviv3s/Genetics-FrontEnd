@@ -60,6 +60,11 @@ class ForgotPasswordActivity : AppCompatActivity() {
             emailInput.requestFocus()
             return
         }
+        if (!email.lowercase().endsWith(".com") && !email.lowercase().endsWith(".in")) {
+            emailInput.error = "Email must end with .com or .in"
+            emailInput.requestFocus()
+            return
+        }
 
         resetPasswordButton.isEnabled = false
 

@@ -100,7 +100,7 @@ class FamilyOverviewActivity : AppCompatActivity() {
                 }
 
                 val body = response.body()
-                Log.d("FAMILY_OVERVIEW", "Response received: status=${body?.status}, count=${body?.count}, membersSize=${body?.members?.size}")
+                Log.d("FAMILY_OVERVIEW", "Response received: status=${body?.status}, count=${body?.count}, membersSize=${body?.familyMembers?.size}")
                 
                 if (body?.status != true) {
                     Toast.makeText(this@FamilyOverviewActivity, body?.message ?: "Failed to load", Toast.LENGTH_SHORT).show()
@@ -108,7 +108,7 @@ class FamilyOverviewActivity : AppCompatActivity() {
                 }
 
                 allMembers.clear()
-                val membersToAdd = body.members ?: emptyList()
+                val membersToAdd = body.familyMembers ?: emptyList()
                 allMembers.addAll(membersToAdd)
                 Log.d("FAMILY_OVERVIEW", "allMembers updated: size=${allMembers.size}")
                 membersToAdd.forEachIndexed { index, m ->
@@ -231,7 +231,12 @@ This action cannot be undone."""
             Log.d("FAMILY_OVERVIEW", "onBindViewHolder at pos $position: ${member.fullName}")
 
             holder.tvName.text = member.fullName ?: "Unknown Name"
-            holder.tvRelationship.text = "${member.relationship ?: "Unknown"} •"
+            
+            val displaySide = if (member.sideOfFamily != null && member.sideOfFamily != "None") {
+                " (${member.sideOfFamily})"
+            } else ""
+            
+            holder.tvRelationship.text = "${member.relationship ?: "Unknown"}$displaySide •"
             holder.tvAge.text = "${member.age ?: 0} years"
             holder.tvStatus.text = member.healthStatus ?: "Unknown"
 

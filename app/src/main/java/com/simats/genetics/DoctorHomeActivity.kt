@@ -76,6 +76,10 @@ class DoctorHomeActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
         fetchDoctorDashboard()
     }
 

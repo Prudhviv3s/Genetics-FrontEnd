@@ -58,18 +58,11 @@
         <activity android:name=".FeedbackSuccessActivity" />
         <activity android:name=".AddFamilyMemberActivity" />
         <activity android:name=".SelectRelationshipActivity" />
+        <activity android:name=".SelectFamilySideActivity" />
         <activity android:name=".HealthStatusActivity" />
         <activity android:name=".FamilyOverviewActivity" />
 
 
-        <activity
-            android:name=".ExportReportActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ShareReportActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".DoctorHomeActivity"
             android:launchMode="singleTop" />
@@ -125,16 +118,13 @@
             android:name=".DoctorPatientReportsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".DoctorReportDetailActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".DoctorReportExportActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".DoctorReportShareActivity"
+            android:name=".DoctorReportPatientsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

@@ -38,9 +38,12 @@ class MyProfileActivity : AppCompatActivity() {
             i.putExtra("FULL_NAME", p.fullName ?: "")
             i.putExtra("EMAIL", p.email ?: "")
             i.putExtra("PHONE", p.phone ?: "")
-            i.putExtra("DOB", p.dob ?: "")        // keep as YYYY-MM-DD
+            i.putExtra("DOB", p.dob ?: "")
             i.putExtra("GENDER", p.gender ?: "")
             i.putExtra("AGE", p.age ?: 0)
+            i.putExtra("DOCTOR_ID", p.doctorId ?: "")
+            i.putExtra("PATIENT_ID", p.patientId ?: "")
+            i.putExtra("ROLE", p.role ?: "")
             startActivity(i)
         }
 
@@ -49,7 +52,6 @@ class MyProfileActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Reload after coming back from EditProfileActivity
         loadProfile()
     }
 
@@ -85,12 +87,21 @@ class MyProfileActivity : AppCompatActivity() {
     private fun bindProfile(p: ProfileDto) {
         binding.tvName.text = p.fullName ?: "-"
 
-        val role = p.role ?: "User"
-        val id = p.id ?: 0
-        binding.tvUserId.text = "$role ID: #$id"
+        val role = (p.role ?: "User").trim()
+        val myId = p.id ?: 0
+        
+        // Match logic with EditProfileActivity for consistent ID display
+        val displayUserId = when (role.lowercase()) {
+            "doctor" -> if (!p.doctorId.isNullOrBlank()) p.doctorId else "DT${1000 + myId}"
+            "patient" -> if (!p.patientId.isNullOrBlank()) p.patientId else "PT${1000 + myId}"
+            else -> "#$myId"
+        }
+        
+        val capitalizedRole = role.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+        binding.tvUserId.text = "$capitalizedRole ID: $displayUserId"
 
         val isFemale = (p.gender ?: "").lowercase() == "female"
-        
+
         if (isFemale) {
             binding.ivProfileIcon.setImageResource(R.drawable.ic_female_avatar)
             binding.ivGenderIcon.setImageResource(R.drawable.ic_female_silhouette)
@@ -100,7 +111,8 @@ class MyProfileActivity : AppCompatActivity() {
             binding.ivProfileIcon.setPadding(0, 0, 0, 0)
             binding.ivProfileIcon.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
             binding.ivProfileIcon.imageTintList = null
-            binding.ivGenderIcon.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.text_secondary))
+            binding.ivGenderIcon.imageTintList =
+                android.content.res.ColorStateList.valueOf(getColor(R.color.text_secondary))
         } else {
             binding.ivProfileIcon.setImageResource(R.drawable.ic_person)
             binding.ivGenderIcon.setImageResource(R.drawable.ic_person)
@@ -110,8 +122,10 @@ class MyProfileActivity : AppCompatActivity() {
             binding.ivProfileIcon.layoutParams.height = size60dp
             binding.ivProfileIcon.setPadding(0, 0, 0, 0)
             binding.ivProfileIcon.scaleType = android.widget.ImageView.ScaleType.CENTER_INSIDE
-            binding.ivProfileIcon.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.solidblue))
-            binding.ivGenderIcon.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.text_secondary))
+            binding.ivProfileIcon.imageTintList =
+                android.content.res.ColorStateList.valueOf(getColor(R.color.solidblue))
+            binding.ivGenderIcon.imageTintList =
+                android.content.res.ColorStateList.valueOf(getColor(R.color.text_secondary))
         }
 
         binding.tvEmailValue.text = p.email ?: "-"

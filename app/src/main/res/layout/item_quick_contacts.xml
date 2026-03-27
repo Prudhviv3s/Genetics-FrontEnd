@@ -27,14 +27,14 @@
         android:layout_marginStart="12dp"
         app:cardCornerRadius="24dp"
         app:cardElevation="0dp"
-        app:cardBackgroundColor="#F0F5FF">
+        app:cardBackgroundColor="#E8F5E9">
         
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="12dp"
             android:src="@drawable/ic_doctor"
-            app:tint="#1D61FF" />
+            app:tint="#2E7D32" />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView

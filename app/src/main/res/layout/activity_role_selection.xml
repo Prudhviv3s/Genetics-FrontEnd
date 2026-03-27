@@ -102,7 +102,7 @@
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:background="@drawable/circular_light_blue_background"
+                android:background="@drawable/circular_solid_blue_background"
                 android:padding="16dp"
                 android:src="@drawable/ic_doctor" />
 

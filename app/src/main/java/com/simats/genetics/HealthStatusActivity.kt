@@ -27,6 +27,8 @@ class HealthStatusActivity : AppCompatActivity() {
 
     private var selectedPosition: Int = -1
     private var memberId: Int = -1
+    private var relationship: String? = null
+    private var side: String? = null
 
     data class HealthStatus(val title: String, val description: String)
 
@@ -35,12 +37,16 @@ class HealthStatusActivity : AppCompatActivity() {
         setContentView(R.layout.activity_health_status)
 
         memberId = intent.getIntExtra("MEMBER_ID", -1)
+        relationship = intent.getStringExtra("RELATIONSHIP")
+        side = intent.getStringExtra("SIDE")
+        
         if (memberId == -1) {
             Toast.makeText(this, "Member ID missing. Please add family member again.", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
-
+        
+        // ... (rest of onCreate remains same)
         val token = TokenManager.getToken(this)
         if (token.isNullOrBlank()) {
             Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show()
@@ -85,14 +91,15 @@ class HealthStatusActivity : AppCompatActivity() {
         btnContinue.isEnabled = false
 
         val req = FamilyMemberUpdateRequest(
-            relationship = null,
-            health_status = healthStatus,  // "Affected" / "Unaffected" / "Carrier" / "Unknown"
-            medical_notes = null
+            relationship = relationship,
+            side_of_family = side ?: "None",
+            health_status = healthStatus,
+            medical_notes = "" // Send empty string instead of null to match web
         )
 
         ApiClient.getApi(this).updateFamilyMember(memberId, req)
             .enqueue(object : Callback<FamilyMemberUpdateResponse> {
-
+                // ... (rest remains same)
                 override fun onResponse(
                     call: Call<FamilyMemberUpdateResponse>,
                     response: Response<FamilyMemberUpdateResponse>

@@ -1,5 +1,6 @@
 package com.simats.genetics
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +10,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.MaterialToolbar
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.ImageView
 import com.simats.genetics.network.ApiClient
+import com.simats.genetics.network.TokenManager
 import com.simats.genetics.network.responses.MarkNotificationReadResponse
 import com.simats.genetics.network.responses.NotificationItem
 import com.simats.genetics.network.responses.NotificationsListResponse
@@ -19,21 +27,14 @@ import retrofit2.Response
 
 class NotificationsActivity : AppCompatActivity() {
 
-    private lateinit var cardAnalysis: View
-    private lateinit var cardFamily: View
-    private lateinit var cardPedigree: View
-    private lateinit var cardAppointment: View
-    private lateinit var cardReview: View
-
+    private lateinit var rvNotifications: RecyclerView
+    private lateinit var tvCount: TextView
     private lateinit var filterAll: TextView
     private lateinit var filterUnread: TextView
 
-    private val cards by lazy {
-        listOf(cardAnalysis, cardFamily, cardPedigree, cardAppointment, cardReview)
-    }
-
+    private lateinit var adapter: NotificationAdapter
     private var currentTab = "all" // "all" or "unread"
-    private var latestNotifications: List<NotificationItem> = emptyList()
+    private val notificationList = mutableListOf<NotificationItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +46,11 @@ class NotificationsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
-        // cards
-        cardAnalysis = findViewById(R.id.card_analysis)
-        cardFamily = findViewById(R.id.card_family)
-        cardPedigree = findViewById(R.id.card_pedigree)
-        cardAppointment = findViewById(R.id.card_appointment)
-        cardReview = findViewById(R.id.card_review)
+        tvCount = findViewById(R.id.notifications_count)
+        rvNotifications = findViewById(R.id.rv_notifications)
+        rvNotifications.layoutManager = LinearLayoutManager(this)
+        adapter = NotificationAdapter(notificationList)
+        rvNotifications.adapter = adapter
 
         // filters
         filterAll = findViewById(R.id.filter_all)
@@ -109,8 +109,13 @@ class NotificationsActivity : AppCompatActivity() {
 
                     val body = response.body()
                     if (body?.status == true) {
-                        latestNotifications = body.notifications
-                        renderToCards(latestNotifications)
+                        notificationList.clear()
+                        notificationList.addAll(body.notifications)
+                        adapter.notifyDataSetChanged()
+
+                        // Update count text
+                        val count = if (currentTab == "unread") body.notifications.size else body.newCount
+                        tvCount.text = if (count > 0) "$count New Notifications" else "No New Notifications"
                     } else {
                         Toast.makeText(this@NotificationsActivity, "Failed to load", Toast.LENGTH_SHORT).show()
                     }
@@ -124,50 +129,125 @@ class NotificationsActivity : AppCompatActivity() {
     }
 
     // =========================
-    // SHOW DATA IN YOUR 5 CARDS
+    // RECYCLER ADAPTER
     // =========================
-    private fun renderToCards(notifs: List<NotificationItem>) {
-        // hide all first
-        cards.forEach { it.visibility = View.GONE }
+    inner class NotificationAdapter(private val list: List<NotificationItem>) :
+        RecyclerView.Adapter<NotificationAdapter.NotifViewHolder>() {
 
-        // show max 5
-        val showList = notifs.take(5)
+        inner class NotifViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+            val ivIcon: ImageView = v.findViewById(R.id.iv_notif_icon)
+            val iconContainer: CardView = v.findViewById(R.id.icon_container)
+            val tvTitle: TextView = v.findViewById(R.id.tv_notif_title)
+            val tvMsg: TextView = v.findViewById(R.id.tv_notif_message)
+            val tvTime: TextView = v.findViewById(R.id.tv_notif_time)
+            val dot: View = v.findViewById(R.id.unread_dot)
+        }
 
-        showList.forEachIndexed { index, notif ->
-            val card = cards[index]
-            card.visibility = View.VISIBLE
-            bindCard(card, notif)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotifViewHolder {
+            val v = LayoutInflater.from(parent.context).inflate(R.layout.item_notification, parent, false)
+            return NotifViewHolder(v)
+        }
 
-            // click -> mark read
-            card.setOnClickListener {
-                if (!notif.isRead) markRead(notif.id)
-                // later you can open screen based on notifType/data
+        override fun onBindViewHolder(holder: NotifViewHolder, position: Int) {
+            val item = list[position]
+            holder.tvTitle.text = item.title ?: "Notification"
+            holder.tvMsg.text = item.message ?: ""
+            holder.tvTime.text = item.timeAgo ?: item.createdAt ?: ""
+            holder.dot.visibility = if (item.isRead) View.INVISIBLE else View.VISIBLE
+
+            // customize icon based on type (backend types are lowercase)
+            when (item.notifType?.lowercase()) {
+                "analysis" -> {
+                    holder.ivIcon.setImageResource(R.drawable.ic_document)
+                    holder.iconContainer.setCardBackgroundColor(Color.parseColor("#F0F4FF"))
+                }
+                "family" -> {
+                    holder.ivIcon.setImageResource(R.drawable.ic_family_members)
+                    holder.iconContainer.setCardBackgroundColor(Color.parseColor("#E8F5E9"))
+                }
+                "pedigree" -> {
+                    holder.ivIcon.setImageResource(R.drawable.ic_check_circle)
+                    holder.iconContainer.setCardBackgroundColor(Color.parseColor("#F3E5F5"))
+                }
+                "appointment" -> {
+                    holder.ivIcon.setImageResource(R.drawable.ic_calendar)
+                    holder.iconContainer.setCardBackgroundColor(Color.parseColor("#FFF3E0"))
+                }
+                "review" -> {
+                    holder.ivIcon.setImageResource(R.drawable.ic_info)
+                    holder.iconContainer.setCardBackgroundColor(Color.parseColor("#FFEBEE"))
+                }
+                else -> {
+                    holder.ivIcon.setImageResource(R.drawable.ic_notifications)
+                    holder.iconContainer.setCardBackgroundColor(Color.parseColor("#F5F5F5"))
+                }
+            }
+
+            holder.itemView.setOnClickListener {
+                if (!item.isRead) markRead(item.id)
+                handleNavigation(item)
             }
         }
+
+        override fun getItemCount() = list.size
     }
 
-    private fun bindCard(card: View, notif: NotificationItem) {
-        val viewGroup = card as? android.view.ViewGroup
-        if (viewGroup == null || viewGroup.childCount == 0) return
-        val root = viewGroup.getChildAt(0) as? android.widget.RelativeLayout ?: return
+    private fun handleNavigation(item: NotificationItem) {
+        val type = item.notifType?.lowercase()
+        val data = item.data ?: emptyMap<String, Any>()
+        val role = TokenManager.getRole(this) ?: "Patient"
+        val isDoctor = role.equals("Doctor", ignoreCase = true)
 
-        if (root.childCount < 2) return
-        val contentLayout = root.getChildAt(1) as? android.widget.LinearLayout ?: return
+        when (type) {
+            "analysis" -> {
+                val analysisId = (data["analysis_id"] as? Number)?.toInt() ?: 0
+                val patientId = (data["patient_id"] as? Number)?.toInt() ?: 0
+                val patientName = data["patient_name"] as? String ?: "Unknown"
+                val displayId = data["patient_display_id"] as? String ?: ""
 
-        if (contentLayout.childCount < 3) return
-        val titleLayout = contentLayout.getChildAt(0) as? android.widget.RelativeLayout ?: return
-        val tvMsg = contentLayout.getChildAt(1) as? android.widget.TextView ?: return
-        val tvTime = contentLayout.getChildAt(2) as? android.widget.TextView ?: return
-
-        if (titleLayout.childCount < 2) return
-        val tvTitle = titleLayout.getChildAt(0) as? android.widget.TextView ?: return
-        val dot = titleLayout.getChildAt(1) as? android.view.View ?: return
-
-        tvTitle.text = notif.title ?: "-"
-        tvMsg.text = notif.message ?: ""
-        tvTime.text = notif.createdAt ?: ""  // if backend sends created_at, else blank
-
-        dot.visibility = if (notif.isRead) View.INVISIBLE else View.VISIBLE
+                if (isDoctor) {
+                    // Doctors go to DoctorReportDetailActivity
+                    val intent = Intent(this, DoctorReportDetailActivity::class.java)
+                    intent.putExtra("ANALYSIS_ID", analysisId)
+                    intent.putExtra("PATIENT_ID", patientId)
+                    intent.putExtra("PATIENT_NAME", patientName)
+                    intent.putExtra("PATIENT_DISPLAY_ID", displayId)
+                    startActivity(intent)
+                } else {
+                    // Patients go to AnalysisActivity
+                    if (analysisId > 0) {
+                        val intent = Intent(this, AnalysisActivity::class.java)
+                        intent.putExtra("ANALYSIS_ID", analysisId)
+                        startActivity(intent)
+                    }
+                }
+            }
+            "family", "pedigree" -> {
+                // Navigate to Family Overview
+                val intent = Intent(this, FamilyOverviewActivity::class.java)
+                startActivity(intent)
+            }
+            "general" -> {
+                val screen = data["screen"] as? String
+                if (screen == "my_results") {
+                    val intent = Intent(this, AnalysisActivity::class.java)
+                    startActivity(intent)
+                } else if (screen == "patient_detail" && isDoctor) {
+                    // New Patient Registration notification for Doctors
+                    val patientId = (data["patient_id"] as? Number)?.toInt() ?: 0
+                    val patientName = data["patient_name"] as? String ?: "Unknown"
+                    val patientEmail = data["patient_email"] as? String ?: ""
+                    val displayId = data["patient_display_id"] as? String ?: ""
+                    
+                    val intent = Intent(this, PatientDetailsActivity::class.java)
+                    intent.putExtra("PATIENT_ID", patientId)
+                    intent.putExtra("PATIENT_NAME", patientName)
+                    intent.putExtra("PATIENT_EMAIL", patientEmail)
+                    intent.putExtra("PATIENT_DISPLAY_ID", displayId)
+                    startActivity(intent)
+                }
+            }
+        }
     }
 
     // =========================

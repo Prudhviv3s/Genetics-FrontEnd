@@ -28,6 +28,7 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var emailInput: TextInputEditText
     private lateinit var phoneInput: TextInputEditText
     private lateinit var dobInput: TextInputEditText
+    private lateinit var ageInput: TextInputEditText
     private lateinit var genderInput: MaterialAutoCompleteTextView
     private lateinit var genderInputLayout: com.google.android.material.textfield.TextInputLayout
 
@@ -35,6 +36,8 @@ class EditProfileActivity : AppCompatActivity() {
 
     private var myRole: String = ""
     private var myId: Int = 0
+    private var doctorIdFromApi: String = ""
+    private var patientIdFromApi: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +48,6 @@ class EditProfileActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
-        // views
         profileImage = findViewById(R.id.profile_image)
         tvUserId = findViewById(R.id.tv_user_id)
 
@@ -53,12 +55,12 @@ class EditProfileActivity : AppCompatActivity() {
         emailInput = findViewById(R.id.email_input)
         phoneInput = findViewById(R.id.phone_input)
         dobInput = findViewById(R.id.dob_input)
+        ageInput = findViewById(R.id.age_input)
         genderInput = findViewById(R.id.gender_input)
         genderInputLayout = findViewById(R.id.gender_input_layout)
 
         saveButton = findViewById(R.id.save_button)
 
-        // gender dropdown
         val genders = arrayOf("Male", "Female", "Other")
         val adapter = android.widget.ArrayAdapter(this, android.R.layout.simple_list_item_1, genders)
         genderInput.setAdapter(adapter)
@@ -74,12 +76,11 @@ class EditProfileActivity : AppCompatActivity() {
         dobInput.setOnClickListener { showDatePicker() }
         saveButton.setOnClickListener { saveProfile() }
 
-        // Populate from intent extras if available
         intent.getStringExtra("FULL_NAME")?.let { nameInput.setText(it) }
         intent.getStringExtra("EMAIL")?.let { emailInput.setText(it) }
         intent.getStringExtra("PHONE")?.let { phoneInput.setText(it) }
         intent.getStringExtra("DOB")?.let { dobInput.setText(it) }
-        intent.getStringExtra("GENDER")?.let { 
+        intent.getStringExtra("GENDER")?.let {
             genderInput.setText(it, false)
             updateProfileIcon(it)
         }
@@ -89,27 +90,29 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun updateProfileIcon(gender: String?) {
         val isFemale = (gender ?: "").lowercase() == "female"
-        
+
         if (isFemale) {
             profileImage.setImageResource(R.drawable.ic_female_avatar)
             genderInputLayout.setStartIconDrawable(R.drawable.ic_female_silhouette)
             profileImage.setPadding(0, 0, 0, 0)
             profileImage.strokeWidth = 0f
             profileImage.imageTintList = null
-            genderInputLayout.setStartIconTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.text_secondary)))
+            genderInputLayout.setStartIconTintList(
+                android.content.res.ColorStateList.valueOf(getColor(R.color.text_secondary))
+            )
         } else {
             profileImage.setImageResource(R.drawable.ic_person)
             genderInputLayout.setStartIconDrawable(R.drawable.ic_person)
             profileImage.setPadding(30, 30, 30, 30)
             profileImage.strokeWidth = 2f
-            profileImage.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.solidblue))
-            genderInputLayout.setStartIconTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.text_secondary)))
+            profileImage.imageTintList =
+                android.content.res.ColorStateList.valueOf(getColor(R.color.solidblue))
+            genderInputLayout.setStartIconTintList(
+                android.content.res.ColorStateList.valueOf(getColor(R.color.text_secondary))
+            )
         }
     }
 
-    // =========================
-    // LOAD PROFILE (GET /me/)
-    // =========================
     private fun loadProfile() {
         ApiClient.getApi(this).getMyProfile().enqueue(object : Callback<MyProfileResponse> {
             override fun onResponse(call: Call<MyProfileResponse>, response: Response<MyProfileResponse>) {
@@ -129,19 +132,22 @@ class EditProfileActivity : AppCompatActivity() {
 
                 myRole = (p.role ?: "").trim()
                 myId = p.id ?: 0
+                doctorIdFromApi = p.doctorId ?: ""
+                patientIdFromApi = p.patientId ?: ""
 
-                // Same ID format
                 val displayId = when (myRole.lowercase()) {
-                    "doctor" -> "DR${1000 + myId}"
-                    "patient" -> "PT${1000 + myId}"
+                    "doctor" -> if (doctorIdFromApi.isNotBlank()) doctorIdFromApi else "DT${1000 + myId}"
+                    "patient" -> if (patientIdFromApi.isNotBlank()) patientIdFromApi else "PT${1000 + myId}"
                     else -> "#$myId"
                 }
-                tvUserId.text = "${if (myRole.isNotBlank()) myRole else "User"} ID: #$displayId"
+
+                tvUserId.text = "${if (myRole.isNotBlank()) myRole else "User"} ID: $displayId"
 
                 nameInput.setText(p.fullName ?: "")
                 emailInput.setText(p.email ?: "")
                 phoneInput.setText(p.phone ?: "")
                 dobInput.setText(p.dob ?: "")
+                ageInput.setText(p.age?.toString() ?: "")
                 genderInput.setText(p.gender ?: "", false)
                 updateProfileIcon(p.gender)
             }
@@ -153,18 +159,39 @@ class EditProfileActivity : AppCompatActivity() {
         })
     }
 
-    // =========================
-    // SAVE PROFILE (PUT /me/)
-    // =========================
     private fun saveProfile() {
         val fullName = nameInput.text?.toString()?.trim().orEmpty()
         val email = emailInput.text?.toString()?.trim().orEmpty()
         val phone = phoneInput.text?.toString()?.trim().orEmpty()
         val dob = dobInput.text?.toString()?.trim().orEmpty()
+        val ageStr = ageInput.text?.toString()?.trim().orEmpty()
         val gender = genderInput.text?.toString()?.trim().orEmpty()
 
         if (fullName.isEmpty() || email.isEmpty()) {
             Toast.makeText(this, "Name and Email are required", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailInput.error = "Please enter a valid email"
+            emailInput.requestFocus()
+            return
+        }
+        if (!email.lowercase().endsWith(".com") && !email.lowercase().endsWith(".in")) {
+            emailInput.error = "Email must end with .com or .in"
+            emailInput.requestFocus()
+            return
+        }
+
+        if (!fullName.matches(Regex("^[a-zA-Z\\s]+$"))) {
+            nameInput.error = "Full name must contain only alphabets"
+            nameInput.requestFocus()
+            return
+        }
+
+        if (phone.isNotBlank() && phone.length != 10) {
+            phoneInput.error = "Phone number must be 10 digits"
+            phoneInput.requestFocus()
             return
         }
 
@@ -173,6 +200,7 @@ class EditProfileActivity : AppCompatActivity() {
             email = email,
             phone = phone,
             dob = dob,
+            age = ageStr.toIntOrNull(),
             gender = gender
         )
 
@@ -209,8 +237,24 @@ class EditProfileActivity : AppCompatActivity() {
         val datePickerDialog = DatePickerDialog(
             this,
             { _, selectedYear, selectedMonth, selectedDay ->
-                val date = "%02d/%02d/%04d".format(selectedDay, selectedMonth + 1, selectedYear)
-                dobInput.setText(date)
+                val mm = (selectedMonth + 1).toString().padStart(2, '0')
+                val dd = selectedDay.toString().padStart(2, '0')
+                dobInput.setText("$selectedYear-$mm-$dd")
+
+                // Calculate age automatically
+                val birthCalendar = Calendar.getInstance()
+                birthCalendar.set(selectedYear, selectedMonth, selectedDay)
+                
+                val today = Calendar.getInstance()
+                var age = today.get(Calendar.YEAR) - birthCalendar.get(Calendar.YEAR)
+                
+                if (today.get(Calendar.DAY_OF_YEAR) < birthCalendar.get(Calendar.DAY_OF_YEAR)) {
+                    age--
+                }
+                
+                if (age >= 0) {
+                    ageInput.setText(age.toString())
+                }
             },
             year,
             month,

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,9 @@ import retrofit2.Response
 
 class DoctorPedigreeAnalysisActivity : AppCompatActivity() {
 
+    private lateinit var pedigreeView: PedigreeChartView
+    private lateinit var loader: ProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_doctor_pedigree_analysis)
@@ -31,15 +35,20 @@ class DoctorPedigreeAnalysisActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // ✅ Get patient data properly
-        val patientName = intent.getStringExtra("PATIENT_NAME")
-        val patientId = intent.getIntExtra("PATIENT_ID", -1)
+        val patientName      = intent.getStringExtra("PATIENT_NAME")
+        val patientId        = intent.getIntExtra("PATIENT_ID", -1)
+        val patientDisplayId = intent.getStringExtra("PATIENT_DISPLAY_ID")
 
         findViewById<TextView>(R.id.tv_patient_name_header).text = patientName ?: "Unknown"
+        findViewById<TextView>(R.id.tv_patient_id_header).text   = "ID: ${patientDisplayId ?: "Unknown"}"
+
+        // Bind views
+        pedigreeView = findViewById(R.id.pedigree_chart_view)
+        loader       = findViewById(R.id.loader)
 
         // Zoom
         var currentZoom = 100
-        val tvZoomPercent = findViewById<TextView>(R.id.tv_zoom_percent)
+        val tvZoomPercent  = findViewById<TextView>(R.id.tv_zoom_percent)
         val chartContainer = findViewById<ConstraintLayout>(R.id.chart_container)
 
         findViewById<MaterialCardView>(R.id.btn_zoom_in).setOnClickListener {
@@ -56,16 +65,13 @@ class DoctorPedigreeAnalysisActivity : AppCompatActivity() {
             }
         }
 
-        // DNA Detection button
-        findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_run_detection)
-            .setOnClickListener {
-                val intent = Intent(this, DoctorDnaReportActivity::class.java)
-                intent.putExtra("PATIENT_ID", patientId)
-                intent.putExtra("PATIENT_NAME", patientName)
-                startActivity(intent)
-            }
 
-        // ✅ Fetch pedigree chart
+        // Initial variables set but fetching moved to onResume
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val patientId = intent.getIntExtra("PATIENT_ID", -1)
         if (patientId != -1) {
             fetchPedigreeData(patientId)
         } else {
@@ -74,6 +80,7 @@ class DoctorPedigreeAnalysisActivity : AppCompatActivity() {
     }
 
     private fun fetchPedigreeData(patientId: Int) {
+        loader.visibility = View.VISIBLE
 
         ApiClient.getApi(this)
             .getDoctorPatientPedigreeChart(patientId)
@@ -83,48 +90,48 @@ class DoctorPedigreeAnalysisActivity : AppCompatActivity() {
                     call: Call<PedigreeChartResponse>,
                     response: Response<PedigreeChartResponse>
                 ) {
+                    loader.visibility = View.GONE
 
                     if (!response.isSuccessful) {
                         Log.e("DOC_PED_CHART", "HTTP ${response.code()} err=${response.errorBody()?.string()}")
                         Toast.makeText(
                             this@DoctorPedigreeAnalysisActivity,
-                            "HTTP ${response.code()}",
-                            Toast.LENGTH_SHORT
+                            "Failed to load chart (HTTP ${response.code()}). Is the server running?",
+                            Toast.LENGTH_LONG
                         ).show()
                         return
                     }
 
                     val body = response.body()
-
                     if (body?.status == true && body.pedigree != null) {
-
-                        if (body.pedigree.nodes.isNullOrEmpty()) {
+                        val nodes = body.pedigree.nodes
+                        if (nodes.isNullOrEmpty()) {
+                            // PedigreeChartView already shows a placeholder
                             Toast.makeText(
                                 this@DoctorPedigreeAnalysisActivity,
-                                "No pedigree nodes found",
-                                Toast.LENGTH_SHORT
+                                "No family members found for this patient. Please add family members first.",
+                                Toast.LENGTH_LONG
                             ).show()
                             return
                         }
-
-                        findViewById<PedigreeChartView>(R.id.pedigree_chart_view)
-                            .setData(body.pedigree)
-
+                        // Set data — PedigreeChartView will redraw automatically
+                        pedigreeView.setData(body.pedigree)
                     } else {
                         Toast.makeText(
                             this@DoctorPedigreeAnalysisActivity,
                             body?.message ?: "No pedigree data available",
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_LONG
                         ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<PedigreeChartResponse>, t: Throwable) {
+                    loader.visibility = View.GONE
                     Log.e("DOC_PED_CHART", "FAIL ${t.message}", t)
                     Toast.makeText(
                         this@DoctorPedigreeAnalysisActivity,
                         "Network error: ${t.message}",
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_LONG
                     ).show()
                 }
             })

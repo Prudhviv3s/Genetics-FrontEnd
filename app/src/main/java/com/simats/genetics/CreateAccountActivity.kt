@@ -88,6 +88,21 @@ class CreateAccountActivity : AppCompatActivity() {
                     val mm = (selectedMonth + 1).toString().padStart(2, '0')
                     val dd = selectedDay.toString().padStart(2, '0')
                     dobInput.setText("$selectedYear-$mm-$dd") // YYYY-MM-DD
+
+                    // Calculate age automatically
+                    val birthCalendar = Calendar.getInstance()
+                    birthCalendar.set(selectedYear, selectedMonth, selectedDay)
+                    
+                    val today = Calendar.getInstance()
+                    var age = today.get(Calendar.YEAR) - birthCalendar.get(Calendar.YEAR)
+                    
+                    if (today.get(Calendar.DAY_OF_YEAR) < birthCalendar.get(Calendar.DAY_OF_YEAR)) {
+                        age--
+                    }
+                    
+                    if (age >= 0) {
+                        ageInput.setText(age.toString())
+                    }
                 },
                 year, month, day
             ).show()
@@ -112,6 +127,9 @@ class CreateAccountActivity : AppCompatActivity() {
 
         // Validate inputs
         if (fullName.isEmpty()) { fullNameInput.error = "Full name is required"; fullNameInput.requestFocus(); return }
+        if (!fullName.matches(Regex("^[a-zA-Z\\s]+$"))) {
+            fullNameInput.error = "Full name must contain only alphabets"; fullNameInput.requestFocus(); return
+        }
         if (dob.isEmpty()) { dobInput.error = "Date of birth is required"; dobInput.requestFocus(); return }
         if (gender.isEmpty()) { genderInput.error = "Gender is required"; genderInput.requestFocus(); return }
         if (ageStr.isEmpty()) { ageInput.error = "Age is required"; ageInput.requestFocus(); return }
@@ -123,11 +141,22 @@ class CreateAccountActivity : AppCompatActivity() {
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInput.error = "Please enter a valid email"; emailInput.requestFocus(); return
         }
+        if (!email.lowercase().endsWith(".com") && !email.lowercase().endsWith(".in")) {
+            emailInput.error = "Email must end with .com or .in"; emailInput.requestFocus(); return
+        }
 
         if (phone.isEmpty()) { phoneInput.error = "Phone number is required"; phoneInput.requestFocus(); return }
+        if (phone.length != 10) {
+            phoneInput.error = "Phone number must be 10 digits"; phoneInput.requestFocus(); return
+        }
 
         if (password.isEmpty()) { passwordInput.error = "Password is required"; passwordInput.requestFocus(); return }
-        if (password.length < 6) { passwordInput.error = "Password must be at least 6 characters"; passwordInput.requestFocus(); return }
+        val missingRequirements = com.simats.genetics.utils.PasswordValidator.validate(password)
+        if (missingRequirements.isNotEmpty()) {
+            passwordInput.error = "Missing: " + missingRequirements.joinToString(", ")
+            passwordInput.requestFocus()
+            return
+        }
 
         if (password != confirmPassword) {
             confirmPasswordInput.error = "Passwords do not match"; confirmPasswordInput.requestFocus(); return

@@ -87,6 +87,16 @@ class SignInActivity : AppCompatActivity() {
             emailInput.requestFocus()
             return
         }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailInput.error = "Please enter a valid email"
+            emailInput.requestFocus()
+            return
+        }
+        if (!email.lowercase().endsWith(".com") && !email.lowercase().endsWith(".in")) {
+            emailInput.error = "Email must end with .com or .in"
+            emailInput.requestFocus()
+            return
+        }
         if (password.isEmpty()) {
             passwordInput.error = "Password is required"
             passwordInput.requestFocus()
@@ -105,7 +115,14 @@ class SignInActivity : AppCompatActivity() {
                     if (!res.isSuccessful) {
                         val err = res.errorBody()?.string()
                         Log.e("LOGIN", "HTTP ${res.code()} err=$err")
-                        Toast.makeText(this@SignInActivity, "HTTP ${res.code()}", Toast.LENGTH_LONG).show()
+                        
+                        val errorMsg = if (res.code() == 400) {
+                            "Incorrect username or password"
+                        } else {
+                            "Login failed (Error ${res.code()})"
+                        }
+                        
+                        Toast.makeText(this@SignInActivity, errorMsg, Toast.LENGTH_LONG).show()
                         return@withContext
                     }
 
@@ -120,12 +137,28 @@ class SignInActivity : AppCompatActivity() {
                     }
 
                     //  SAVE TOKEN (this makes Doctor dashboard work)
+                    val actualRole = (body.role ?: "").trim()
+                    val intendedRole = intent.getStringExtra("ROLE") ?: "PATIENT"
+
+                    val isDoctorMatch = intendedRole == "DOCTOR" && actualRole.equals("Doctor", ignoreCase = true)
+                    val isPatientMatch = intendedRole == "PATIENT" && actualRole.equals("Patient", ignoreCase = true)
+
+                    if (!isDoctorMatch && !isPatientMatch) {
+                        val errorMsg = if (actualRole.equals("Doctor", ignoreCase = true)) {
+                            "This account is for a Doctor. Please use the Doctor Sign In page."
+                        } else {
+                            "This account is for a Patient. Please use the Patient Sign In page."
+                        }
+                        Toast.makeText(this@SignInActivity, errorMsg, Toast.LENGTH_LONG).show()
+                        return@withContext
+                    }
+
                     TokenManager.saveToken(this@SignInActivity, body.token!!)
                     body.full_name?.let { TokenManager.saveUserName(this@SignInActivity, it) }
+                    TokenManager.saveRole(this@SignInActivity, actualRole)
 
-                    //  Navigate by role returned from backend (not by intent ROLE)
-                    val role = (body.role ?: "").trim()
-                    if (role.equals("Doctor", ignoreCase = true)) {
+                    //  Navigate by role
+                    if (actualRole.equals("Doctor", ignoreCase = true)) {
                         startActivity(Intent(this@SignInActivity, DoctorHomeActivity::class.java))
                     } else {
                         startActivity(Intent(this@SignInActivity, PatientHomeActivity::class.java))

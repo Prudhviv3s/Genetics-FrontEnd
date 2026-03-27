@@ -6,13 +6,14 @@ data class FamilyOverviewResponse(
     @SerializedName("status") val status: Boolean,
     @SerializedName("message") val message: String? = null,
     @SerializedName("count") val count: Int = 0,
-    @SerializedName("members") val members: List<FamilyMemberItemResponse> = emptyList()
+    @SerializedName("family_members") val familyMembers: List<FamilyMemberItemResponse> = emptyList()
 )
 
 data class FamilyMemberItemResponse(
     @SerializedName("id") val id: Int,
     @SerializedName("full_name") val fullName: String?,
     @SerializedName("relationship") val relationship: String?,
+    @SerializedName("side_of_family") val sideOfFamily: String?,
     @SerializedName("age") val age: Int?,
     @SerializedName("gender") val gender: String?,
     @SerializedName("health_status") val healthStatus: String?

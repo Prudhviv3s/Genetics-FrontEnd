@@ -23,7 +23,6 @@ class PedigreeActivity : AppCompatActivity() {
     private lateinit var tvZoomPercent: TextView
     private lateinit var chartContainer: ConstraintLayout
     private lateinit var pedigreeView: PedigreeChartView
-    private var isCreatingDefaults = false
 
     private var currentZoom = 100
 
@@ -127,14 +126,7 @@ class PedigreeActivity : AppCompatActivity() {
 
                 val body = response.body()
                 if (body?.status == true && body.pedigree != null) {
-                    val nodes = body.pedigree.nodes
-                    if ((nodes.isNullOrEmpty() || (nodes.size == 1 && nodes[0].isProband)) && !isCreatingDefaults) {
-                        // Brand new user, create default Father and Mother
-                        isCreatingDefaults = true
-                        createDefaultFamilyMembers()
-                    } else {
-                        pedigreeView.setData(body.pedigree)
-                    }
+                    pedigreeView.setData(body.pedigree)
                 } else {
                     Toast.makeText(this@PedigreeActivity, body?.message ?: "No pedigree data", Toast.LENGTH_SHORT).show()
                 }
@@ -144,37 +136,6 @@ class PedigreeActivity : AppCompatActivity() {
                 Log.e("PEDIGREE", "FAIL ${t.message}", t)
                 Toast.makeText(this@PedigreeActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
-        })
-    }
-
-    private fun createDefaultFamilyMembers() {
-        // Create Father
-        val fatherReq = com.simats.genetics.network.requests.FamilyMemberCreateRequest(
-            full_name = "Father",
-            gender = "Male",
-            age = 50
-        )
-        // Create Mother
-        val motherReq = com.simats.genetics.network.requests.FamilyMemberCreateRequest(
-            full_name = "Mother",
-            gender = "Female",
-            age = 48
-        )
-
-        val api = ApiClient.getApi(this)
-        
-        // Simple sequential creation for demo/requirement
-        api.createFamilyMember(fatherReq).enqueue(object : Callback<com.simats.genetics.network.responses.FamilyMemberCreateResponse> {
-            override fun onResponse(call: Call<com.simats.genetics.network.responses.FamilyMemberCreateResponse>, res: Response<com.simats.genetics.network.responses.FamilyMemberCreateResponse>) {
-                api.createFamilyMember(motherReq).enqueue(object : Callback<com.simats.genetics.network.responses.FamilyMemberCreateResponse> {
-                    override fun onResponse(call: Call<com.simats.genetics.network.responses.FamilyMemberCreateResponse>, res2: Response<com.simats.genetics.network.responses.FamilyMemberCreateResponse>) {
-                        // After both created, refresh
-                        fetchPedigreeData()
-                    }
-                    override fun onFailure(call: Call<com.simats.genetics.network.responses.FamilyMemberCreateResponse>, t: Throwable) {}
-                })
-            }
-            override fun onFailure(call: Call<com.simats.genetics.network.responses.FamilyMemberCreateResponse>, t: Throwable) {}
         })
     }
 

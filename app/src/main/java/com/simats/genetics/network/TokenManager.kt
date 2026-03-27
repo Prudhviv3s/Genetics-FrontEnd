@@ -6,6 +6,7 @@ object TokenManager {
     private const val PREF = "auth_pref"
     private const val KEY_TOKEN = "token"
     private const val KEY_NAME = "full_name"
+    private const val KEY_ROLE = "role"
 
     fun saveToken(context: Context, token: String) {
         context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
@@ -29,6 +30,18 @@ object TokenManager {
     fun getToken(context: Context): String? {
         return context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
             .getString(KEY_TOKEN, null)
+    }
+
+    fun saveRole(context: Context, role: String) {
+        context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+            .edit()
+            .putString(KEY_ROLE, role)
+            .apply()
+    }
+
+    fun getRole(context: Context): String? {
+        return context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+            .getString(KEY_ROLE, null)
     }
 
     fun clearToken(context: Context) {

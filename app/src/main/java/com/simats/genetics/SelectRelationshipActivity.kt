@@ -87,59 +87,25 @@ class SelectRelationshipActivity : AppCompatActivity() {
             }
 
             val relationship = relationships[selectedPosition].label
-            saveRelationshipToBackend(memberId, relationship, btnContinue)
+            navigateNext(relationship)
         }
     }
 
-    private fun saveRelationshipToBackend(memberId: Int, relationship: String, btnContinue: Button) {
-        btnContinue.isEnabled = false
-
-        val req = FamilyMemberUpdateRequest(
-            relationship = relationship,
-            health_status = null,
-            medical_notes = null
-        )
-
-        ApiClient.getApi(this).updateFamilyMember(memberId, req)
-            .enqueue(object : Callback<FamilyMemberUpdateResponse> {
-
-                override fun onResponse(
-                    call: Call<FamilyMemberUpdateResponse>,
-                    response: Response<FamilyMemberUpdateResponse>
-                ) {
-                    btnContinue.isEnabled = true
-
-                    if (response.code() == 401) {
-                        Toast.makeText(this@SelectRelationshipActivity, "Session expired. Login again.", Toast.LENGTH_SHORT).show()
-                        TokenManager.clearToken(this@SelectRelationshipActivity)
-                        startActivity(Intent(this@SelectRelationshipActivity, SignInActivity::class.java))
-                        finish()
-                        return
-                    }
-
-                    if (!response.isSuccessful) {
-                        val err = response.errorBody()?.string()
-                        Log.e("REL_UPDATE", "HTTP ${response.code()} err=$err")
-                        Toast.makeText(this@SelectRelationshipActivity, "HTTP ${response.code()}", Toast.LENGTH_SHORT).show()
-                        return
-                    }
-
-                    val body = response.body()
-                    if (body?.status == true) {
-                        val i = Intent(this@SelectRelationshipActivity, HealthStatusActivity::class.java)
-                        i.putExtra("MEMBER_ID", memberId)
-                        startActivity(i)
-                    } else {
-                        Toast.makeText(this@SelectRelationshipActivity, body?.message ?: "Failed", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-                override fun onFailure(call: Call<FamilyMemberUpdateResponse>, t: Throwable) {
-                    btnContinue.isEnabled = true
-                    Log.e("REL_UPDATE", "FAIL ${t.message}", t)
-                    Toast.makeText(this@SelectRelationshipActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
-                }
-            })
+    private fun navigateNext(relationship: String) {
+        val needsSide = listOf("Grandfather", "Grandmother", "Uncle", "Aunt", "Cousin").contains(relationship)
+        
+        if (needsSide) {
+            val i = Intent(this, SelectFamilySideActivity::class.java)
+            i.putExtra("MEMBER_ID", memberId)
+            i.putExtra("RELATIONSHIP", relationship)
+            startActivity(i)
+        } else {
+            val i = Intent(this, HealthStatusActivity::class.java)
+            i.putExtra("MEMBER_ID", memberId)
+            i.putExtra("RELATIONSHIP", relationship)
+            i.putExtra("SIDE", "None")
+            startActivity(i)
+        }
     }
 
     inner class RelationshipAdapter(

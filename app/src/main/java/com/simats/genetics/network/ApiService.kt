@@ -52,6 +52,9 @@ interface ApiService {
     @GET("doctor/patient/{patient_id}/pedigree/")
     fun getDoctorPatientPedigreeChart(@Path("patient_id") patientId: Int): Call<PedigreeChartResponse>
 
+    @GET("doctor/report/{patient_id}/")
+    fun getDoctorPatientReportDetail(@Path("patient_id") patientId: Int): Call<DoctorPatientReportDetailResponse>
+
     // =========================
     // CLINICAL NOTES (Doctor)
     // =========================
@@ -148,6 +151,12 @@ interface ApiService {
         @Body body: RunPatternDetectionRequest
     ): Response<RunDetectionResponse>
 
+    @Multipart
+    @POST("predict-pdf/")
+    suspend fun predictFromPdf(
+        @Part file: MultipartBody.Part
+    ): Response<PredictPdfResponse>
+
     // =========================
     // PATTERN DETAIL
     // =========================
@@ -166,22 +175,6 @@ interface ApiService {
     @GET("dna/analysis/{analysis_id}/result/")
     fun getAnalysisResult(@Path("analysis_id") analysisId: Int): Call<AnalysisResultResponse>
 
-    @POST("dna/analysis/{analysis_id}/share/")
-    fun shareReport(
-        @Path("analysis_id") analysisId: Int,
-        @Body body: ShareReportRequest
-    ): Call<ApiResponse>
-
-    @GET("reports/export-info/")
-    fun getExportReportInfo(@Query("analysis_id") analysisId: Int): Call<ExportReportInfoResponse>
-
-    @POST("reports/share/")
-    fun shareReport(@Body body: ShareReportRequest): Call<ShareReportResponse>
-
-    @GET("reports/export-info/")
-    fun getExportInfo(@Query("analysis_id") analysisId: Int): Call<ExportInfoResponse>
-
-
-
+    
 
 }

@@ -108,7 +108,7 @@
                 android:id="@+id/doctor_icon"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/circular_light_green_background"
+                android:background="@drawable/circular_solid_blue_background"
                 android:padding="8dp"
                 android:src="@drawable/ic_doctor" />
 

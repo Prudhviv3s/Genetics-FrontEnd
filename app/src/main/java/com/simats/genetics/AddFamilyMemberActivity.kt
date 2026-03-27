@@ -114,11 +114,11 @@ class AddFamilyMemberActivity : AppCompatActivity() {
                 }
 
                 val body = response.body()
-                if (body?.status == true && body.memberId != null) {
+                if (body?.status == true && body.member?.id != null) {
 
                     //  go next with MEMBER_ID
                     val i = Intent(this@AddFamilyMemberActivity, SelectRelationshipActivity::class.java)
-                    i.putExtra("MEMBER_ID", body.memberId)
+                    i.putExtra("MEMBER_ID", body.member.id)
                     startActivity(i)
 
                 } else {
