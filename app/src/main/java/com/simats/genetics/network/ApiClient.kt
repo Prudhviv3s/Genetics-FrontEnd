@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 object ApiClient {
 
     // MUST end with /api/
-    const val BASE_URL = "http:180.235.121.245:8008"
+    const val BASE_URL = "http://180.235.121.245:8008"
 
     private var retrofit: Retrofit? = null
 
