@@ -52,8 +52,6 @@
         <activity android:name=".AccessibilityActivity" />
         <activity android:name=".HelpCenterActivity" />
         <activity android:name=".FAQActivity" />
-        <activity android:name=".HelpCenterActivity" />
-        <activity android:name=".FAQActivity" />
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".FeedbackSuccessActivity" />
         <activity android:name=".AddFamilyMemberActivity" />

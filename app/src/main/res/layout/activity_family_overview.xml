@@ -55,31 +55,6 @@
                     android:textColor="#757575"
                     android:textSize="14sp" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/notification_filter_background"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_filter"
-                    app:tint="@color/solidblue" />
-
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="12dp"
-                    android:background="@drawable/notification_filter_background"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_pattern_analysis"
-                    app:tint="@color/solidblue" />
-            </LinearLayout>
         </RelativeLayout>
 
         <EditText
